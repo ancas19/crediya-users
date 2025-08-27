@@ -1,0 +1,76 @@
+package co.com.crediya.users.r2dbc.config;
+
+import io.r2dbc.pool.ConnectionPool;
+import io.r2dbc.pool.ConnectionPoolConfiguration;
+import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
+import io.r2dbc.postgresql.PostgresqlConnectionFactory;
+import io.r2dbc.spi.ConnectionFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
+import org.springframework.r2dbc.connection.R2dbcTransactionManager;
+import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.transaction.ReactiveTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.util.StringUtils;
+
+import java.time.Duration;
+import java.util.Objects;
+
+@Configuration
+@EnableTransactionManagement
+@EnableR2dbcRepositories(basePackages = "co.com.crediya.users.r2dbc.repository")
+public class PostgreSQLConnectionPool {
+
+    private final PostgresqlConnectionProperties properties;
+
+    public PostgreSQLConnectionPool(PostgresqlConnectionProperties properties) {
+        this.properties = properties;
+    }
+
+    @Bean
+    public PostgresqlConnectionFactory postgresConnectionFactory() {
+        PostgresqlConnectionConfiguration.Builder builder = PostgresqlConnectionConfiguration.builder()
+                .host(properties.host())
+                .database(properties.database())
+                .username(properties.username())
+                .password(properties.password())
+                .port(properties.port());
+
+        if (Objects.nonNull(properties.schema()) && !properties.schema().isEmpty()) {
+            builder.schema(properties.schema());
+        }
+
+        return new PostgresqlConnectionFactory(builder.build());
+    }
+
+    @Bean(destroyMethod = "dispose")
+    public ConnectionPool connectionPool() {
+        ConnectionPoolConfiguration.Builder builder = ConnectionPoolConfiguration.builder(postgresConnectionFactory())
+                .maxSize(properties.maxSize())
+                .initialSize(properties.poolSize())
+                .maxIdleTime(Duration.ofSeconds(properties.maxIdleTime()));
+
+        if (StringUtils.hasText(properties.validationQuery())) {
+            builder.validationQuery(properties.validationQuery());
+        }
+
+        return new ConnectionPool(builder.build());
+    }
+
+
+    @Bean("r2dbcTransactionManager")
+    public R2dbcTransactionManager transactionManager(ConnectionPool connectionPool) {
+        return new R2dbcTransactionManager(connectionPool);
+    }
+
+
+    @Bean
+    public DatabaseClient databaseClient(ConnectionPool connectionPool) {
+        return DatabaseClient.builder()
+                .connectionFactory(connectionPool)
+                .namedParameters(true)
+                .build();
+    }
+
+}
