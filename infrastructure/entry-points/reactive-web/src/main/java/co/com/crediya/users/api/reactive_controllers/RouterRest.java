@@ -21,6 +21,7 @@ public class RouterRest {
     @Bean
     public RouterFunction<ServerResponse> routerFunction() {
         return RouterFunctions.route()
-                .POST("/users",usersRequestHandler::)
+                .POST("/users",usersRequestHandler::createUser)
+                .build();
     }
 }
