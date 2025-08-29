@@ -1,18 +1,16 @@
-package co.com.crediya.users.model.users.models;
+package co.com.crediya.users.api.request;
+
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
-
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder(toBuilder = true)
-public class Users {
-    private UUID id;
+public class UsersRequest {
     private String identification;
     private String firstName;
     private String lastName;
@@ -22,6 +20,5 @@ public class Users {
     private BigDecimal baseSalary;
     private String email;
     private String password;
-    private UUID roleId;
     private String roleName;
 }

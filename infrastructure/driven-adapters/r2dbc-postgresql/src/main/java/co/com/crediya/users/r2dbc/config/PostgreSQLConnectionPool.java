@@ -31,14 +31,14 @@ public class PostgreSQLConnectionPool {
     @Bean
     public PostgresqlConnectionFactory postgresConnectionFactory() {
         PostgresqlConnectionConfiguration.Builder builder = PostgresqlConnectionConfiguration.builder()
-                .host(properties.host())
-                .database(properties.database())
-                .username(properties.username())
-                .password(properties.password())
-                .port(properties.port());
+                .host(properties.getHost())
+                .database(properties.getDatabase())
+                .username(properties.getUsername())
+                .password(properties.getPassword())
+                .port(properties.getPort());
 
-        if (Objects.nonNull(properties.schema()) && !properties.schema().isEmpty()) {
-            builder.schema(properties.schema());
+        if (Objects.nonNull(properties.getSchema()) && !properties.getSchema().isEmpty()) {
+            builder.schema(properties.getSchema());
         }
 
         return new PostgresqlConnectionFactory(builder.build());
@@ -47,12 +47,12 @@ public class PostgreSQLConnectionPool {
     @Bean(destroyMethod = "dispose")
     public ConnectionPool connectionPool() {
         ConnectionPoolConfiguration.Builder builder = ConnectionPoolConfiguration.builder(postgresConnectionFactory())
-                .maxSize(properties.maxSize())
-                .initialSize(properties.poolSize())
-                .maxIdleTime(Duration.ofSeconds(properties.maxIdleTime()));
+                .maxSize(properties.getMaxSize())
+                .initialSize(properties.getPoolSize())
+                .maxIdleTime(Duration.ofSeconds(properties.getMaxIdleTime()));
 
-        if (StringUtils.hasText(properties.validationQuery())) {
-            builder.validationQuery(properties.validationQuery());
+        if (StringUtils.hasText(properties.getValidationQuery())) {
+            builder.validationQuery(properties.getValidationQuery());
         }
 
         return new ConnectionPool(builder.build());
