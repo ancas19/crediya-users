@@ -1,6 +1,7 @@
 package co.com.crediya.users.r2dbc.entity;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -9,11 +10,11 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @Table(name="roles")
 @NoArgsConstructor
 @AllArgsConstructor
-public class RolesEntity {
+public class RolesEntity extends AbstractAuditoria{
     @Id
     @Column("id")
     private UUID id;

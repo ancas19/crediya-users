@@ -8,7 +8,7 @@ public class Mapper {
     public static Users toModel(UsersRequest usersRequest) {
         return Users.builder()
                 .identification(usersRequest.getIdentification())
-                .firstName(usersRequest.getFirstName())
+                .names(usersRequest.getNames())
                 .lastName(usersRequest.getLastName())
                 .birthDate(usersRequest.getBirthDate())
                 .address(usersRequest.getAddress())
@@ -22,8 +22,9 @@ public class Mapper {
 
     public static UsersResponse toResponse(Users users) {
         return UsersResponse.builder()
+                .id(users.getId())
                 .identification(users.getIdentification())
-                .firstName(users.getFirstName())
+                .names(users.getNames())
                 .lastName(users.getLastName())
                 .birthDate(users.getBirthDate())
                 .address(users.getAddress())

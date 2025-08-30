@@ -8,6 +8,7 @@ import co.com.crediya.users.usecase.roles.RolesUseCase;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
 
 @RequiredArgsConstructor
 public class UsersUseCase {
@@ -15,23 +16,37 @@ public class UsersUseCase {
     private final RolesUseCase rolesUseCase;
 
     public Mono<Users> createUser(Users userInformation) {
-        return usersRepositoryPort.existsByEmail(userInformation.getEmail())
-                .flatMap(existsByEmail -> {
-                            if (existsByEmail) {
-                                throw new BadRequestException(ErrorMessages.ERROR_MESSAGE_EMAIL_ALREADY_EXISTS.getMessage());
-                            }
-                            return usersRepositoryPort.existsByDocumentNumber(userInformation.getIdentification());
-                        }
-                ).flatMap(existsByDocumentNumber -> {
-                            if (existsByDocumentNumber) {
-                                throw new BadRequestException(ErrorMessages.ERROR_MESSAGE_DOCUMENT_ALREADY_EXISTS.getMessage());
-                            }
-                            return rolesUseCase.findByName(userInformation.getRoleName());
-                        }
-                ).flatMap(roleFound -> {
-                            userInformation.setRoleId(roleFound.getId());
-                             return this.usersRepositoryPort.createUser(userInformation);
-                        }
-                );
+        return validateUserData(userInformation)
+                .then(checkEmailNotExists(userInformation.getEmail()))
+                .then(checkDocumentNotExists(userInformation.getIdentification()))
+                .then(rolesUseCase.findByName(userInformation.getRoleName()))
+                .flatMap(role -> {
+                    userInformation.setRoleId(role.getId());
+                    return usersRepositoryPort.createUser(userInformation);
+                });
+    }
+
+    private Mono<Void> validateUserData(Users user) {
+        LocalDate today = LocalDate.now();
+        int age = today.getYear() - user.getBirthDate().getYear();
+        if (age < 18) {
+            return Mono.error(new BadRequestException(ErrorMessages.ERROR_MESSAGE_UNDERAGE.getMessage()));
+        }
+        return Mono.empty();
+    }
+
+    private Mono<Void> checkEmailNotExists(String email) {
+        return usersRepositoryPort.existsByEmail(email)
+                .flatMap(exists -> exists
+                        ? Mono.error(new BadRequestException(ErrorMessages.ERROR_MESSAGE_EMAIL_ALREADY_EXISTS.getMessage()))
+                        : Mono.empty());
+    }
+
+    private Mono<Void> checkDocumentNotExists(String documentNumber) {
+        return usersRepositoryPort.existsByDocumentNumber(documentNumber)
+                .flatMap(exists -> exists
+                        ? Mono.error(new BadRequestException(ErrorMessages.ERROR_MESSAGE_DOCUMENT_ALREADY_EXISTS.getMessage()))
+                        : Mono.empty());
     }
 }
+

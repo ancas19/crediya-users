@@ -4,6 +4,7 @@ import co.com.crediya.users.api.response.ErrorResponse;
 import co.com.crediya.users.model.commos.enums.ErrorMessages;
 import co.com.crediya.users.model.commos.exception.BadRequestException;
 import co.com.crediya.users.model.commos.exception.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,10 +15,12 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @RestControllerAdvice
 public class CustomExceptionhandler {
     @ExceptionHandler(BadRequestException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleBadRequest(BadRequestException ex, ServerWebExchange exchange) {
+        log.error("BadRequestException: ", ex);
         return Mono.just(
                 ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
@@ -31,6 +34,7 @@ public class CustomExceptionhandler {
     }
     @ExceptionHandler(NotFoundException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleNotFoundException(NotFoundException ex, ServerWebExchange exchange) {
+        log.error("Resource not found: ", ex);
         return Mono.just(
                 ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
@@ -45,6 +49,7 @@ public class CustomExceptionhandler {
 
     @ExceptionHandler(Exception.class)
     public Mono<ResponseEntity<ErrorResponse>> handleGlobalExceptions(Exception ex, ServerWebExchange exchange) {
+        log.error("An unexpected error occurred: ", ex);
         return Mono.just(
                 ResponseEntity
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)

@@ -14,7 +14,7 @@ import java.util.UUID;
 public class UsersResponse {
     private UUID id;
     private String identification;
-    private String firstName;
+    private String names;
     private String lastName;
     private LocalDate birthDate;
     private String address;

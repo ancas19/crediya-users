@@ -20,9 +20,9 @@ public class UsersRequestHandler {
 
     public Mono<ServerResponse> createUser(ServerRequest request) {
         return request.bodyToMono(UsersRequest.class)
-                .doOnNext(this.validator::validate)
+                .flatMap(this.validator::validate)
                 .map(Mapper::toModel)
-                .map(usersAppService::createUser)
+                .flatMap(usersAppService::createUser)
                 .flatMap(savedUser->ServerResponse
                         .status(HttpStatus.CREATED)
                         .contentType(MediaType.APPLICATION_JSON)

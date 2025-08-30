@@ -34,6 +34,7 @@ public class UsersReactiveRepositoryAdapter extends ReactiveAdapterOperations<
 
     @Override
     public Mono<Users> createUser(Users userInformation) {
-        return null;
+        return this.repository.save(this.mapper.map(userInformation, UsersEntity.class))
+                .map(entity -> this.mapper.map(entity, Users.class));
     }
 }

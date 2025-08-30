@@ -3,10 +3,7 @@ package co.com.crediya.users.api.utils;
 import co.com.crediya.users.model.commos.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.BeanPropertyBindingResult;
-import org.springframework.validation.Errors;
-import org.springframework.validation.ObjectError;
-import org.springframework.validation.Validator;
+import org.springframework.validation.*;
 import reactor.core.publisher.Mono;
 
 import java.util.stream.Collectors;
@@ -21,7 +18,12 @@ public class CustomValidator {
         if (errors.hasErrors()) {
             String errorMessages = errors.getAllErrors()
                     .stream()
-                    .map(ObjectError::getDefaultMessage)
+                    .map(oError -> {
+                        if (oError instanceof FieldError fieldError) {
+                            return "%s: %s".formatted(fieldError.getField().trim(), fieldError.getDefaultMessage());
+                        }
+                        return "%s: %s".formatted(oError.getObjectName(), oError.getDefaultMessage());
+                    })
                     .collect(Collectors.joining(", "));
 
             return Mono.error(new BadRequestException(errorMessages));

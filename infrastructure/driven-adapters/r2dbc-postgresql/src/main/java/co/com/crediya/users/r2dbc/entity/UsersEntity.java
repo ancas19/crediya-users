@@ -3,6 +3,7 @@ package co.com.crediya.users.r2dbc.entity;
 
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -13,11 +14,11 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @Table(name="clients")
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsersEntity {
+public class UsersEntity extends AbstractAuditoria{
     @Id
     @Column("id")
     private UUID id;
@@ -26,7 +27,7 @@ public class UsersEntity {
     private String identification;
 
     @Column("nombres")
-    private String firstName;
+    private String names;
 
     @Column("apellidos")
     private String lastName;

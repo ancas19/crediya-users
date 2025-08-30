@@ -1,7 +1,11 @@
 CREATE TABLE roles (
     id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     nombre      VARCHAR(100) NOT NULL,
-    titulo      VARCHAR(100) NOT NULL
+    titulo      VARCHAR(100) NOT NULL,
+    u_creacion          VARCHAR(100) NOT NULL,
+    u_actualizacion     VARCHAR(100),
+    f_creacion          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    f_actualizacion     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX idx_roles_nombre ON roles(nombre);
 
@@ -17,6 +21,11 @@ CREATE TABLE clients (
     correo_electronico  VARCHAR(150) UNIQUE NOT NULL,
     password            VARCHAR(255) NOT NULL,
     role_id             UUID,
+    ultimo_login        TIMESTAMP,
+     u_creacion          VARCHAR(100) NOT NULL,
+    u_actualizacion     VARCHAR(100),
+    f_creacion          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    f_actualizacion     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_clients_roles FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE SET NULL
 );
 

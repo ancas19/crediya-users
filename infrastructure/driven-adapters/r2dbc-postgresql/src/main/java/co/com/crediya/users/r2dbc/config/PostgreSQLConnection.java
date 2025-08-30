@@ -4,13 +4,11 @@ import io.r2dbc.pool.ConnectionPool;
 import io.r2dbc.pool.ConnectionPoolConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
-import io.r2dbc.spi.ConnectionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.r2dbc.connection.R2dbcTransactionManager;
 import org.springframework.r2dbc.core.DatabaseClient;
-import org.springframework.transaction.ReactiveTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
 
@@ -20,11 +18,11 @@ import java.util.Objects;
 @Configuration
 @EnableTransactionManagement
 @EnableR2dbcRepositories(basePackages = "co.com.crediya.users.r2dbc.repository")
-public class PostgreSQLConnectionPool {
+public class PostgreSQLConnection {
 
     private final PostgresqlConnectionProperties properties;
 
-    public PostgreSQLConnectionPool(PostgresqlConnectionProperties properties) {
+    public PostgreSQLConnection(PostgresqlConnectionProperties properties) {
         this.properties = properties;
     }
 
