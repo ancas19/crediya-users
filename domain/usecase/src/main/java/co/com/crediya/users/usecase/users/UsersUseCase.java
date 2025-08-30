@@ -6,9 +6,11 @@ import co.com.crediya.users.model.users.gateways.UsersRepositoryPort;
 import co.com.crediya.users.model.users.models.Users;
 import co.com.crediya.users.usecase.roles.RolesUseCase;
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class UsersUseCase {
@@ -28,6 +30,15 @@ public class UsersUseCase {
     public Mono<Users> findByIdentification(String userIdentification) {
         return usersRepositoryPort.findByIdentification(userIdentification)
                 .switchIfEmpty(Mono.error(new BadRequestException(ErrorMessages.ERROR_MESSAGE_USER_NOT_FOUND.getMessage().formatted(userIdentification))));
+    }
+
+    public Flux<Users> finAll() {
+        return this.usersRepositoryPort.finAll();
+    }
+
+    public Mono<Users> findById(UUID id) {
+        return this.usersRepositoryPort.findById(id)
+                .switchIfEmpty(Mono.error(new BadRequestException(ErrorMessages.ERROR_MESSAGE_USER_NOT_FOUND_BY_ID.getMessage().formatted(id))));
     }
     private Mono<Void> validateUserData(Users user) {
         LocalDate today = LocalDate.now();
@@ -51,6 +62,7 @@ public class UsersUseCase {
                         ? Mono.error(new BadRequestException(ErrorMessages.ERROR_MESSAGE_DOCUMENT_ALREADY_EXISTS.getMessage()))
                         : Mono.empty());
     }
+
 
 
 }

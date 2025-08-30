@@ -11,7 +11,10 @@ import co.com.crediya.users.model.users.models.Users;
 import co.com.crediya.users.usecase.users.UsersUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -28,6 +31,18 @@ public class UsersAppService {
 
     public Mono<UsersResponse> findByIdentification( String userIdentification) {
         return usersUseCase.findByIdentification(userIdentification)
+                .map(Mapper::toResponse)
+                .doOnSuccess(user->log.info("User found successfully with id: {} and email {}",user.getId(), user.getEmail()));
+    }
+
+    public Flux<UsersResponse> findAll() {
+        return usersUseCase.finAll()
+                .map(Mapper::toResponse)
+                .doOnComplete(()->log.info("All users retrieved successfully"));
+    }
+
+    public Mono<UsersResponse> findById(UUID id) {
+        return usersUseCase.findById(id)
                 .map(Mapper::toResponse)
                 .doOnSuccess(user->log.info("User found successfully with id: {} and email {}",user.getId(), user.getEmail()));
     }
