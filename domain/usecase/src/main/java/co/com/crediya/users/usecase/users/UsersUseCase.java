@@ -25,7 +25,10 @@ public class UsersUseCase {
                     return usersRepositoryPort.createUser(userInformation);
                 });
     }
-
+    public Mono<Users> findByIdentification(String userIdentification) {
+        return usersRepositoryPort.findByIdentification(userIdentification)
+                .switchIfEmpty(Mono.error(new BadRequestException(ErrorMessages.ERROR_MESSAGE_USER_NOT_FOUND.getMessage().formatted(userIdentification))));
+    }
     private Mono<Void> validateUserData(Users user) {
         LocalDate today = LocalDate.now();
         int age = today.getYear() - user.getBirthDate().getYear();
@@ -48,5 +51,7 @@ public class UsersUseCase {
                         ? Mono.error(new BadRequestException(ErrorMessages.ERROR_MESSAGE_DOCUMENT_ALREADY_EXISTS.getMessage()))
                         : Mono.empty());
     }
+
+
 }
 

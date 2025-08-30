@@ -7,4 +7,5 @@ public interface UsersRepositoryPort {
     Mono<Boolean> existsByEmail(String email);
     Mono<Boolean> existsByDocumentNumber(String documentNumber);
     Mono<Users> createUser(Users userInformation);
+    Mono<Users> findByIdentification(String userIdentification);
 }

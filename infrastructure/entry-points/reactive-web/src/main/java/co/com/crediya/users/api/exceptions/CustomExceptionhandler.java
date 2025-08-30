@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.reactive.resource.NoResourceFoundException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -40,6 +41,21 @@ public class CustomExceptionhandler {
                         .status(HttpStatus.NOT_FOUND)
                         .body(  new ErrorResponse(
                                 parseErrorMessages(ex.getMessage()),
+                                HttpStatus.NOT_FOUND.toString(),
+                                exchange.getRequest().getURI().toString(),
+                                LocalDateTime.now())
+                        )
+        );
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleNoResourceFoundException(NoResourceFoundException ex, ServerWebExchange exchange) {
+        log.error("NoResourceFoundException: ", ex);
+        return Mono.just(
+                ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(  new ErrorResponse(
+                                List.of(ex.getMessage()),
                                 HttpStatus.NOT_FOUND.toString(),
                                 exchange.getRequest().getURI().toString(),
                                 LocalDateTime.now())

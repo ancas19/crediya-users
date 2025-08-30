@@ -1,5 +1,6 @@
 package co.com.crediya.users.api.reactive_controllers;
 
+import co.com.crediya.users.api.request.IdentificationRequest;
 import co.com.crediya.users.api.request.UsersRequest;
 import co.com.crediya.users.api.services.UsersAppService;
 import co.com.crediya.users.api.utils.CustomValidator;
@@ -30,5 +31,18 @@ public class UsersRequestHandler {
                 );
 
 
+    }
+
+    public Mono<ServerResponse> findUserByIdentification(ServerRequest request){
+        return request.bodyToMono(IdentificationRequest.class)
+                .flatMap(this.validator::validate)
+                .map(IdentificationRequest::getIdentification)
+                .flatMap(usersAppService::findByIdentification)
+                .flatMap(user->ServerResponse
+                        .status(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(user)
+                )
+                .switchIfEmpty(ServerResponse.status(HttpStatus.NO_CONTENT).build());
     }
 }

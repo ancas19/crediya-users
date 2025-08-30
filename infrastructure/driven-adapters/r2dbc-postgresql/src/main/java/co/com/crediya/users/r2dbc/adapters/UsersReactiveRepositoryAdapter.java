@@ -37,4 +37,10 @@ public class UsersReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         return this.repository.save(this.mapper.map(userInformation, UsersEntity.class))
                 .map(entity -> this.mapper.map(entity, Users.class));
     }
+
+    @Override
+    public Mono<Users> findByIdentification(String userIdentification) {
+        return this.repository.findByIdentification(userIdentification)
+                .map(entity -> this.mapper.map(entity, Users.class));
+    }
 }

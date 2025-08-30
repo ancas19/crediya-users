@@ -22,6 +22,7 @@ public class RouterRest {
     public RouterFunction<ServerResponse> routerFunction() {
         return RouterFunctions.route()
                 .POST("/users",usersRequestHandler::createUser)
+                .POST("/users/documents", usersRequestHandler::findUserByIdentification)
                 .build();
     }
 }
