@@ -11,5 +11,5 @@ import java.util.UUID;
 
 public interface RolesRepository extends ReactiveCrudRepository<RolesEntity, UUID>, ReactiveQueryByExampleExecutor<RolesEntity> {
 
-    Mono<Roles> findByName(String name);
+    Mono<RolesEntity> findByName(String name);
 }
