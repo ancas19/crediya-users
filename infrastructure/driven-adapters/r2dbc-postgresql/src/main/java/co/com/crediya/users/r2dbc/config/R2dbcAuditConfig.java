@@ -11,9 +11,7 @@ import reactor.core.publisher.Mono;
 public class R2dbcAuditConfig {
     @Bean
     public ReactiveAuditorAware<String> auditorAware() {
-        return () -> {
-            return Mono.justOrEmpty("ADMIN") // Example
+        return () ->  Mono.justOrEmpty("ADMIN")
                     .switchIfEmpty(Mono.just("SYSTEM"));
-        };
     }
 }

@@ -14,7 +14,7 @@ import java.util.UUID;
 @Table(name="roles")
 @NoArgsConstructor
 @AllArgsConstructor
-public class RolesEntity extends AbstractAuditoria{
+public class RolesEntity extends AbstractAuditoriaEntity {
     @Id
     @Column("id")
     private UUID id;

@@ -57,8 +57,9 @@ public class UsersAppService {
                 .doOnSuccess(user->log.info("User updated successfully with id: {} and email {}",user.getId(), user.getEmail()));
     }
     @Transactional("r2dbcTransactionManager")
-    public Mono<Void> deleteUser(UUID id) {
+    public Mono<UsersResponse> deleteUser(UUID id) {
         return usersUseCase.deleteUser(id)
+                .map(Mapper::toResponse)
                 .doOnSuccess(v->log.info("User deleted successfully with id: {}",id));
     }
 }

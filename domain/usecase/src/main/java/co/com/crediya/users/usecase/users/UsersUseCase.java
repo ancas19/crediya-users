@@ -12,6 +12,8 @@ import reactor.core.publisher.Mono;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import static co.com.crediya.users.model.commos.enums.Constants.INACTIVE;
+
 @RequiredArgsConstructor
 public class UsersUseCase {
     private final UsersRepositoryPort usersRepositoryPort;
@@ -41,9 +43,12 @@ public class UsersUseCase {
                 .switchIfEmpty(Mono.error(new BadRequestException(ErrorMessages.ERROR_MESSAGE_USER_NOT_FOUND_BY_ID.getMessage().formatted(id))));
     }
 
-    public Mono<Void> deleteUser(UUID id) {
+    public Mono<Users> deleteUser(UUID id) {
         return findById(id)
-                .flatMap(existingUser -> usersRepositoryPort.deleteById(existingUser.getId()));
+                .flatMap(existingUser -> {
+                        existingUser.setStatus(INACTIVE.getValue());
+                        return this.usersRepositoryPort.createUser(existingUser);
+                });
     }
 
     public  Mono<Users> updateUser(Users userInformation) {

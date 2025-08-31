@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-public class AbstractAuditoria {
+public class AbstractAuditoriaEntity {
     @CreatedBy
     @Column("u_creacion")
     private String usuarioCreacion;

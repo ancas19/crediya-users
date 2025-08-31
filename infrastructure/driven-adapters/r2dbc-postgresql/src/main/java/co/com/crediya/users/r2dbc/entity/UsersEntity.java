@@ -18,7 +18,7 @@ import java.util.UUID;
 @Table(name="clients")
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsersEntity extends AbstractAuditoria{
+public class UsersEntity extends AbstractAuditoriaEntity {
     @Id
     @Column("id")
     private UUID id;
@@ -46,6 +46,9 @@ public class UsersEntity extends AbstractAuditoria{
 
     @Column("correo_electronico")
     private String email;
+
+    @Column("estado")
+    private String status;
 
     @Column("password")
     private String password;

@@ -82,6 +82,10 @@ public class UsersRequestHandler {
     public Mono<ServerResponse> deleteUser(ServerRequest request) {
         UUID id = UUID.fromString(request.pathVariable("id"));
         return usersAppService.deleteUser(id)
-                .then(ServerResponse.status(HttpStatus.NO_CONTENT).build());
+                .flatMap(user->ServerResponse
+                        .status(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .bodyValue(user)
+                );
     }
 }
