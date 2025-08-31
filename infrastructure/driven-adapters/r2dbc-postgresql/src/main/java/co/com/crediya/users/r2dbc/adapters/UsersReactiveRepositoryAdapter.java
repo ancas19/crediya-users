@@ -34,6 +34,16 @@ public class UsersReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     }
 
     @Override
+    public Mono<Boolean> existsByEmailAndNotId(String email, UUID id) {
+        return this.repository.existsByemailAndIdNot(email, id);
+    }
+
+    @Override
+    public Mono<Boolean> existsByDocumentNumberAndNotId(String documentNumber, UUID id) {
+        return this.repository.existsByIdentificationAndIdNot(documentNumber, id);
+    }
+
+    @Override
     public Mono<Users> createUser(Users userInformation) {
         return this.repository.save(this.mapper.map(userInformation, UsersEntity.class))
                 .map(entity -> this.mapper.map(entity, Users.class));
@@ -49,5 +59,10 @@ public class UsersReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     public Flux<Users> finAll() {
         return this.repository.findAll()
                 .map(entity -> this.mapper.map(entity, Users.class));
+    }
+
+    @Override
+    public Mono<Void> deleteById(UUID id) {
+        return this.repository.deleteById(id);
     }
 }

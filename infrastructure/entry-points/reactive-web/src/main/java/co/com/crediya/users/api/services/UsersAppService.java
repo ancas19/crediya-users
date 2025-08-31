@@ -29,21 +29,36 @@ public class UsersAppService {
                 .doOnSuccess(user->log.info("User created successfully with id: {} and email {}",user.getId(), user.getEmail()));
     }
 
+    @Transactional("r2dbcTransactionManager")
     public Mono<UsersResponse> findByIdentification( String userIdentification) {
         return usersUseCase.findByIdentification(userIdentification)
                 .map(Mapper::toResponse)
                 .doOnSuccess(user->log.info("User found successfully with id: {} and email {}",user.getId(), user.getEmail()));
     }
 
+    @Transactional("r2dbcTransactionManager")
     public Flux<UsersResponse> findAll() {
         return usersUseCase.finAll()
                 .map(Mapper::toResponse)
                 .doOnComplete(()->log.info("All users retrieved successfully"));
     }
 
+    @Transactional("r2dbcTransactionManager")
     public Mono<UsersResponse> findById(UUID id) {
         return usersUseCase.findById(id)
                 .map(Mapper::toResponse)
                 .doOnSuccess(user->log.info("User found successfully with id: {} and email {}",user.getId(), user.getEmail()));
+    }
+
+    @Transactional("r2dbcTransactionManager")
+    public Mono<UsersResponse> updateUser(Users userInformation) {
+        return usersUseCase.updateUser(userInformation)
+                .map(Mapper::toResponse)
+                .doOnSuccess(user->log.info("User updated successfully with id: {} and email {}",user.getId(), user.getEmail()));
+    }
+    @Transactional("r2dbcTransactionManager")
+    public Mono<Void> deleteUser(UUID id) {
+        return usersUseCase.deleteUser(id)
+                .doOnSuccess(v->log.info("User deleted successfully with id: {}",id));
     }
 }

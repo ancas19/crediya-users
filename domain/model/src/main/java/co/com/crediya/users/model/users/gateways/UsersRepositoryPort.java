@@ -9,8 +9,11 @@ import java.util.UUID;
 public interface UsersRepositoryPort {
     Mono<Boolean> existsByEmail(String email);
     Mono<Boolean> existsByDocumentNumber(String documentNumber);
+    Mono<Boolean> existsByEmailAndNotId(String email, UUID id);
+    Mono<Boolean> existsByDocumentNumberAndNotId(String documentNumber, UUID id);
     Mono<Users> createUser(Users userInformation);
     Mono<Users> findByIdentification(String userIdentification);
     Flux<Users> finAll();
     Mono<Users> findById(UUID id);
+    Mono<Void> deleteById(UUID id);
 }

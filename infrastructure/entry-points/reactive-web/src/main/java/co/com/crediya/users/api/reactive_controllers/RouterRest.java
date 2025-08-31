@@ -25,6 +25,8 @@ public class RouterRest {
                 .GET("/users",usersRequestHandler::findAll)
                 .GET("/users/{id}",usersRequestHandler::findById)
                 .POST("/users/documents", usersRequestHandler::findUserByIdentification)
+                .PUT("/users", usersRequestHandler::updateUser)
+                .DELETE("/users/{id}", usersRequestHandler::deleteUser)
                 .build();
     }
 }

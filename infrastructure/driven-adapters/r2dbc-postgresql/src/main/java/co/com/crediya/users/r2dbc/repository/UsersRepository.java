@@ -12,4 +12,6 @@ public interface UsersRepository extends ReactiveCrudRepository<UsersEntity, UUI
     Mono<Boolean> existsByEmail(String email);
     Mono<Boolean> existsByIdentification(String documentNumber);
     Mono<UsersEntity> findByIdentification(String userIdentification);
+    Mono<Boolean> existsByemailAndIdNot(String email, UUID id);
+    Mono<Boolean> existsByIdentificationAndIdNot(String documentNumber, UUID id);
 }
