@@ -32,8 +32,6 @@ public class UsersRequestHandler {
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(savedUser)
                 );
-
-
     }
 
     public Mono<ServerResponse> findUserByIdentification(ServerRequest request){

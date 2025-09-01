@@ -61,8 +61,4 @@ public class UsersReactiveRepositoryAdapter extends ReactiveAdapterOperations<
                 .map(entity -> this.mapper.map(entity, Users.class));
     }
 
-    @Override
-    public Mono<Void> deleteById(UUID id) {
-        return this.repository.deleteById(id);
-    }
 }

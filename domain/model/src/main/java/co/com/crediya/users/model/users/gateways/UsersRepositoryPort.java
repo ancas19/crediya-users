@@ -15,5 +15,4 @@ public interface UsersRepositoryPort {
     Mono<Users> findByIdentification(String userIdentification);
     Flux<Users> finAll();
     Mono<Users> findById(UUID id);
-    Mono<Void> deleteById(UUID id);
 }
