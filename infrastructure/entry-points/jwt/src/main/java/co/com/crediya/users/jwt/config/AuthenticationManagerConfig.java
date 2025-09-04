@@ -1,4 +1,4 @@
-package co.com.crediya.users.api.config;
+package co.com.crediya.users.jwt.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

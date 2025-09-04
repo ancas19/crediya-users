@@ -1,7 +1,7 @@
-package co.com.crediya.users.api.secutiry;
+package co.com.crediya.users.jwt.secutiry;
 
-import co.com.crediya.users.api.config.SecurityProperties;
-import co.com.crediya.users.api.filters.JwtAuthenticationFilter;
+import co.com.crediya.users.jwt.config.SecurityProperties;
+import co.com.crediya.users.jwt.filters.JwtAuthenticationFilter;
 import co.com.crediya.users.usecase.jwt.JWTUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

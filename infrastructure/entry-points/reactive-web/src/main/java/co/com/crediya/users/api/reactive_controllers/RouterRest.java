@@ -13,9 +13,11 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 @Configuration
 public class RouterRest {
     private final UsersRequestHandler usersRequestHandler;
+    private final AuthenticationRequestHandler authenticationRequestHandler;
 
-    public RouterRest(UsersRequestHandler usersRequestHandler) {
+    public RouterRest(UsersRequestHandler usersRequestHandler, AuthenticationRequestHandler authenticationRequestHandler) {
         this.usersRequestHandler = usersRequestHandler;
+        this.authenticationRequestHandler = authenticationRequestHandler;
     }
 
     @Bean
@@ -27,6 +29,13 @@ public class RouterRest {
                 .POST("/users/documents", usersRequestHandler::findUserByIdentification)
                 .PUT("/users", usersRequestHandler::updateUser)
                 .DELETE("/users/{id}", usersRequestHandler::deleteUser)
+                .build();
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> routerAuthenticationFunction(){
+        return route()
+                .POST("/login", authenticationRequestHandler::login)
                 .build();
     }
 }

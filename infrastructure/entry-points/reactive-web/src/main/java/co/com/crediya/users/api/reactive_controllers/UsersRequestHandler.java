@@ -25,7 +25,7 @@ public class UsersRequestHandler {
     public Mono<ServerResponse> createUser(ServerRequest request) {
         return request.bodyToMono(UsersRequest.class)
                 .flatMap(this.validator::validate)
-                .map(Mapper::toModel)
+                .map(Mapper::toUsersModel)
                 .flatMap(usersAppService::createUser)
                 .flatMap(savedUser->ServerResponse
                         .status(HttpStatus.CREATED)
@@ -68,7 +68,7 @@ public class UsersRequestHandler {
     public Mono<ServerResponse> updateUser(ServerRequest request) {
         return request.bodyToMono(UsersRequest.class)
                 .flatMap(this.validator::validate)
-                .map(Mapper::toModel)
+                .map(Mapper::toUsersModel)
                 .flatMap(usersAppService::updateUser)
                 .flatMap(updatedUser->ServerResponse
                         .status(HttpStatus.OK)

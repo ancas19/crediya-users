@@ -90,11 +90,11 @@ class UsersUseCaseTest {
     }
 
     @Test
-    void findAll(){
+    void findAll() {
         //Arrange
         when(usersRepositoryPort.finAll()).thenReturn(Mono.just(user).flux());
         //Act
-        var usersFound= usersUseCase.finAll();
+        var usersFound = usersUseCase.finAll();
         //Assert
         StepVerifier.create(usersFound)
                 .expectNextCount(1)
@@ -139,7 +139,7 @@ class UsersUseCaseTest {
         //Arrange
         when(usersRepositoryPort.findByIdentification(anyString())).thenReturn(Mono.empty());
         //Act
-        String userIdentification="NonExistentID";
+        String userIdentification = "NonExistentID";
         Mono<Users> userFound = usersUseCase.findByIdentification(userIdentification);
         //Assert
         StepVerifier.create(userFound)
@@ -151,8 +151,8 @@ class UsersUseCaseTest {
     void upateUserTest() {
         //Arrange
         when(usersRepositoryPort.findById(any())).thenReturn(Mono.just(user));
-        when(usersRepositoryPort.existsByEmailAndNotId(anyString(),any())).thenReturn(Mono.just(false));
-        when(usersRepositoryPort.existsByDocumentNumberAndNotId(anyString(),any())).thenReturn(Mono.just(false));
+        when(usersRepositoryPort.existsByEmailAndNotId(anyString(), any())).thenReturn(Mono.just(false));
+        when(usersRepositoryPort.existsByDocumentNumberAndNotId(anyString(), any())).thenReturn(Mono.just(false));
         when(rolesUseCase.findByName(anyString())).thenReturn(Mono.just(MocksTest.createRole()));
         when(usersRepositoryPort.createUser(any())).thenReturn(Mono.just(user));
         //Act
@@ -171,8 +171,8 @@ class UsersUseCaseTest {
     void upateUserIdentificationExistsTest() {
         //Arrange
         when(usersRepositoryPort.findById(any())).thenReturn(Mono.just(user));
-        when(usersRepositoryPort.existsByEmailAndNotId(anyString(),any())).thenReturn(Mono.just(false));
-        when(usersRepositoryPort.existsByDocumentNumberAndNotId(anyString(),any())).thenReturn(Mono.just(true));
+        when(usersRepositoryPort.existsByEmailAndNotId(anyString(), any())).thenReturn(Mono.just(false));
+        when(usersRepositoryPort.existsByDocumentNumberAndNotId(anyString(), any())).thenReturn(Mono.just(true));
         when(rolesUseCase.findByName(anyString())).thenReturn(Mono.just(MocksTest.createRole()));
         //Act
         Mono<Users> userCreated = usersUseCase.updateUser(user);
@@ -187,8 +187,8 @@ class UsersUseCaseTest {
     void updateUserAgeErrorTest() {
         //Arrange
         when(usersRepositoryPort.findById(any())).thenReturn(Mono.just(user));
-        when(usersRepositoryPort.existsByEmailAndNotId(anyString(),any())).thenReturn(Mono.just(false));
-        when(usersRepositoryPort.existsByDocumentNumberAndNotId(anyString(),any())).thenReturn(Mono.just(true));
+        when(usersRepositoryPort.existsByEmailAndNotId(anyString(), any())).thenReturn(Mono.just(false));
+        when(usersRepositoryPort.existsByDocumentNumberAndNotId(anyString(), any())).thenReturn(Mono.just(true));
         when(rolesUseCase.findByName(anyString())).thenReturn(Mono.just(MocksTest.createRole()));
         user.setBirthDate(LocalDate.now());
         //Act
@@ -203,8 +203,8 @@ class UsersUseCaseTest {
     void upateUserEmailExistsTest() {
         //Arrange
         when(usersRepositoryPort.findById(any())).thenReturn(Mono.just(user));
-        when(usersRepositoryPort.existsByEmailAndNotId(anyString(),any())).thenReturn(Mono.just(true));
-        when(usersRepositoryPort.existsByDocumentNumberAndNotId(anyString(),any())).thenReturn(Mono.just(true));
+        when(usersRepositoryPort.existsByEmailAndNotId(anyString(), any())).thenReturn(Mono.just(true));
+        when(usersRepositoryPort.existsByDocumentNumberAndNotId(anyString(), any())).thenReturn(Mono.just(true));
         when(rolesUseCase.findByName(anyString())).thenReturn(Mono.just(MocksTest.createRole()));
         //Act
         Mono<Users> userCreated = usersUseCase.updateUser(user);
@@ -215,12 +215,12 @@ class UsersUseCaseTest {
     }
 
     @Test
-    void deleteUser(){
+    void deleteUser() {
         //Arrange
         when(usersRepositoryPort.findById(any())).thenReturn(Mono.just(user));
         when(usersRepositoryPort.createUser(any())).thenReturn(Mono.just(user));
         //Act
-        Mono<Users> userDeleted= usersUseCase.deleteUser(user.getId());
+        Mono<Users> userDeleted = usersUseCase.deleteUser(user.getId());
         //Assert
         StepVerifier.create(userDeleted)
                 .expectNextMatches(u -> {

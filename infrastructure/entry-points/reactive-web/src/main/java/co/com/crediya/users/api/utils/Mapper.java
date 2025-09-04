@@ -1,11 +1,15 @@
 package co.com.crediya.users.api.utils;
 
+import co.com.crediya.users.api.request.AuthenticationRequest;
 import co.com.crediya.users.api.request.UsersRequest;
+import co.com.crediya.users.api.response.TokenResponse;
 import co.com.crediya.users.api.response.UsersResponse;
+import co.com.crediya.users.model.commos.models.Authentication;
+import co.com.crediya.users.model.commos.models.Token;
 import co.com.crediya.users.model.users.models.Users;
 
 public class Mapper {
-    public static Users toModel(UsersRequest usersRequest) {
+    public static Users toUsersModel(UsersRequest usersRequest) {
         return Users.builder()
                 .identification(usersRequest.getIdentification())
                 .names(usersRequest.getNames())
@@ -20,7 +24,7 @@ public class Mapper {
                 .build();
     }
 
-    public static UsersResponse toResponse(Users users) {
+    public static UsersResponse toUsersResponse(Users users) {
         return UsersResponse.builder()
                 .id(users.getId())
                 .identification(users.getIdentification())
@@ -31,6 +35,23 @@ public class Mapper {
                 .phone(users.getPhone())
                 .baseSalary(users.getBaseSalary())
                 .email(users.getEmail())
+                .build();
+    }
+
+    public static Authentication toAuthenticationModel(AuthenticationRequest authenticationRequest) {
+        return Authentication.builder()
+                .email(authenticationRequest.getEmail())
+                .password(authenticationRequest.getPassword())
+                .build();
+    }
+
+    public static TokenResponse toTokenResponse(Token token){
+        return TokenResponse.builder()
+                .names(token.getNames())
+                .lastName(token.getLastName())
+                .email(token.getEmail())
+                .identifcation(token.getIdentifcation())
+                .token(token.getToken())
                 .build();
     }
 

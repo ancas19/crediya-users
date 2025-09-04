@@ -18,6 +18,9 @@ adapters:
     maxIdleTime: ${R2DBC_MAXIDLETIME:10}
     validationQuery: ${R2DBC_VALIDATIONQUERY:SELECT 1}
 
+jwt:
+  secret: f973594fec7723858f405e4d022ed191b5fcb9d307692501c61088852dc270c8
+  expiration: 30
 
 management:
   endpoints:

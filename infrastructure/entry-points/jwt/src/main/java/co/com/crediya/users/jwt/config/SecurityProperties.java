@@ -1,4 +1,4 @@
-package co.com.crediya.users.api.config;
+package co.com.crediya.users.jwt.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

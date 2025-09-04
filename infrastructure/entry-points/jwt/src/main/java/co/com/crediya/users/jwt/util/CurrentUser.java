@@ -1,4 +1,4 @@
-package co.com.crediya.users.api.utils;
+package co.com.crediya.users.jwt.util;
 
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.stereotype.Component;

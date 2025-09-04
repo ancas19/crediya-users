@@ -1,4 +1,4 @@
-package co.com.crediya.users.api.filters;
+package co.com.crediya.users.jwt.filters;
 
 import co.com.crediya.users.usecase.jwt.JWTUseCase;
 import org.springframework.http.HttpHeaders;
