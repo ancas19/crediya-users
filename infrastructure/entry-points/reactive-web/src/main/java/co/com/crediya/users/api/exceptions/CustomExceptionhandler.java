@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.reactive.resource.NoResourceFoundException;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
@@ -63,6 +64,27 @@ public class CustomExceptionhandler {
         );
     }
 
+    @ExceptionHandler(ServerWebInputException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleServerWebInputException(ServerWebInputException ex, ServerWebExchange exchange) {
+        log.error("ServerWebInputException: ", ex);
+        String userMessage = "Invalid request data. Please check your input and try again.";
+        String detailedMessage = ex.getReason() != null ? ex.getReason() : ex.getMessage();
+        String fieldError = null;
+        if (detailedMessage != null && detailedMessage.contains("field")) {
+            fieldError = detailedMessage;
+        }
+        List<String> errors = fieldError != null ? List.of(userMessage, fieldError) : List.of(userMessage, detailedMessage);
+        return Mono.just(
+                ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(new ErrorResponse(
+                                errors,
+                                HttpStatus.BAD_REQUEST.toString(),
+                                exchange.getRequest().getURI().toString(),
+                                LocalDateTime.now())
+                        )
+        );
+    }
     @ExceptionHandler(Exception.class)
     public Mono<ResponseEntity<ErrorResponse>> handleGlobalExceptions(Exception ex, ServerWebExchange exchange) {
         log.error("An unexpected error occurred: ", ex);

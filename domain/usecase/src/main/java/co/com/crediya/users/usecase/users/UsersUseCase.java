@@ -12,11 +12,14 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 import static co.com.crediya.users.model.commos.enums.Constants.INACTIVE;
 
+
 @RequiredArgsConstructor
 public class UsersUseCase {
+    private static final Logger LOGGER = Logger.getLogger(UsersUseCase.class.getName());
     private final UsersRepositoryPort usersRepositoryPort;
     private final RolesUseCase rolesUseCase;
 
