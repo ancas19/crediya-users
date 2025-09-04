@@ -2,7 +2,8 @@ package co.com.crediya.users.model.commos.enums;
 
 public enum Constants {
     ACTIVE("ACTIVE"),
-    INACTIVE("INACTIVE");
+    INACTIVE("INACTIVE"),
+    ROLE("ROLE_%s");
 
     private final String value;
 

@@ -1,6 +1,7 @@
 package co.com.crediya.users.model.users.gateways;
 
 import co.com.crediya.users.model.users.models.Users;
+import co.com.crediya.users.model.users.models.UsersAuthentication;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -15,4 +16,5 @@ public interface UsersRepositoryPort {
     Mono<Users> findByIdentification(String userIdentification);
     Flux<Users> finAll();
     Mono<Users> findById(UUID id);
+    Mono<UsersAuthentication> findByEmail(String email);
 }

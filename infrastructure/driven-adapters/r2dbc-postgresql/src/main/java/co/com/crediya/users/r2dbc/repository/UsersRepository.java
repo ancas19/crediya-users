@@ -1,6 +1,9 @@
 package co.com.crediya.users.r2dbc.repository;
 
+import co.com.crediya.users.model.users.models.UsersAuthentication;
 import co.com.crediya.users.r2dbc.entity.UsersEntity;
+import org.springframework.data.r2dbc.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.query.ReactiveQueryByExampleExecutor;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Mono;
@@ -14,4 +17,23 @@ public interface UsersRepository extends ReactiveCrudRepository<UsersEntity, UUI
     Mono<UsersEntity> findByIdentification(String userIdentification);
     Mono<Boolean> existsByemailAndIdNot(String email, UUID id);
     Mono<Boolean> existsByIdentificationAndIdNot(String documentNumber, UUID id);
+    @Query(
+            """
+            SELECT new co.com.crediya.users.model.users.models.UsersAuthentication(
+                u.id,
+                u.identification,
+                u.names,
+                u.lastName,
+                u.email,
+                u.password,
+                r.name,
+                r.title
+            )
+            FROM UsersEntity u
+            INNER JOIN RolesEntity r ON r.id=u.roleId
+            WHERE u.email=:email
+            AND u.status='ACTIVE'
+            """
+    )
+    Mono<UsersAuthentication> findByEmail(@Param("email") String email);
 }

@@ -1,10 +1,12 @@
 package co.com.crediya.users.usecase.users;
 
 import co.com.crediya.users.model.commos.enums.ErrorMessages;
+import co.com.crediya.users.model.commos.exception.BadCredentialsException;
 import co.com.crediya.users.model.commos.exception.BadRequestException;
 import co.com.crediya.users.model.commos.exception.NotFoundException;
 import co.com.crediya.users.model.users.gateways.UsersRepositoryPort;
 import co.com.crediya.users.model.users.models.Users;
+import co.com.crediya.users.model.users.models.UsersAuthentication;
 import co.com.crediya.users.usecase.roles.RolesUseCase;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Flux;
@@ -73,6 +75,10 @@ public class UsersUseCase {
                 );
     }
 
+    public Mono<UsersAuthentication> findUserByEmail(String email){
+        return this.usersRepositoryPort.findByEmail(email)
+                .switchIfEmpty(Mono.error(new BadCredentialsException(ErrorMessages.ERROR_MESSAGE_BAD_CREDENTIALS.getMessage())));
+    }
 
     private Mono<Void> validateUserData(Users user) {
         LocalDate today = LocalDate.now();

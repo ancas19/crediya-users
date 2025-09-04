@@ -2,6 +2,7 @@ package co.com.crediya.users.r2dbc.adapters;
 
 import co.com.crediya.users.model.users.gateways.UsersRepositoryPort;
 import co.com.crediya.users.model.users.models.Users;
+import co.com.crediya.users.model.users.models.UsersAuthentication;
 import co.com.crediya.users.r2dbc.entity.UsersEntity;
 import co.com.crediya.users.r2dbc.repository.UsersRepository;
 import co.com.crediya.users.r2dbc.helper.ReactiveAdapterOperations;
@@ -59,6 +60,11 @@ public class UsersReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     public Flux<Users> finAll() {
         return this.repository.findAll()
                 .map(entity -> this.mapper.map(entity, Users.class));
+    }
+
+    @Override
+    public Mono<UsersAuthentication> findByEmail(String email) {
+        return this.repository.findByEmail(email);
     }
 
 }
