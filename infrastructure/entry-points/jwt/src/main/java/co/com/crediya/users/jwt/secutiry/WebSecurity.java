@@ -35,8 +35,8 @@ public class WebSecurity {
     public SecurityWebFilterChain httpSecurityFilterChain(ServerHttpSecurity http, ReactiveAuthenticationManager authenticationManager, JWTUseCase jwtService) {
         return http.authorizeExchange(
                         exchanges -> exchanges
-                                .pathMatchers(HttpMethod.POST, "/users").permitAll()
                                 .pathMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                                .pathMatchers(HttpMethod.POST, "/users").permitAll()//.hasAnyRole("ROLE_ADMIN", "ROLE_ASESOR")
                                 .anyExchange()
                                 .authenticated()
                 )

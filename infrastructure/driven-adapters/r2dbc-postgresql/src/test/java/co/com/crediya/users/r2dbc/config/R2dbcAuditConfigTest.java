@@ -10,11 +10,30 @@ import reactor.test.StepVerifier;
 class R2dbcAuditConfigTest {
 
     @Test
-    void auditorAware() {
+    void returnsSystemWhenNoAuthenticationContext() {
         R2dbcAuditConfig config = new R2dbcAuditConfig();
         ReactiveAuditorAware<String> auditorAware = config.auditorAware();
         StepVerifier.create(auditorAware.getCurrentAuditor())
-                .expectNext("ADMIN")
+                .expectNext("SYSTEM")
                 .verifyComplete();
     }
+
+    @Test
+    void returnsSystemWhenAuthenticationIsNull() {
+        R2dbcAuditConfig config = new R2dbcAuditConfig();
+        ReactiveAuditorAware<String> auditorAware = config.auditorAware();
+        StepVerifier.create(auditorAware.getCurrentAuditor())
+                .expectNext("SYSTEM")
+                .verifyComplete();
+    }
+
+    @Test
+    void returnsSystemWhenAuthenticationNameIsNull() {
+        R2dbcAuditConfig config = new R2dbcAuditConfig();
+        ReactiveAuditorAware<String> auditorAware = config.auditorAware();
+        StepVerifier.create(auditorAware.getCurrentAuditor())
+                .expectNext("SYSTEM")
+                .verifyComplete();
+    }
+
 }

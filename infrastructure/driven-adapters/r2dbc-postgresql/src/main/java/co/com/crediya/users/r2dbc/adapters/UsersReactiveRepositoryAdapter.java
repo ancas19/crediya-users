@@ -3,6 +3,7 @@ package co.com.crediya.users.r2dbc.adapters;
 import co.com.crediya.users.model.users.gateways.UsersRepositoryPort;
 import co.com.crediya.users.model.users.models.Users;
 import co.com.crediya.users.model.users.models.UsersAuthentication;
+import co.com.crediya.users.r2dbc.custom_repositories.CustomuserRepository;
 import co.com.crediya.users.r2dbc.entity.UsersEntity;
 import co.com.crediya.users.r2dbc.repository.UsersRepository;
 import co.com.crediya.users.r2dbc.helper.ReactiveAdapterOperations;
@@ -20,8 +21,10 @@ public class UsersReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         UUID,
         UsersRepository
 > implements UsersRepositoryPort {
-    public UsersReactiveRepositoryAdapter(UsersRepository repository, ObjectMapper mapper) {
+    private final CustomuserRepository customuserRepository;
+    public UsersReactiveRepositoryAdapter(UsersRepository repository, ObjectMapper mapper, CustomuserRepository customuserRepository) {
         super(repository, mapper, d -> mapper.map(d, Users.class/* change for domain model */));
+        this.customuserRepository = customuserRepository;
     }
 
     @Override
@@ -64,7 +67,7 @@ public class UsersReactiveRepositoryAdapter extends ReactiveAdapterOperations<
 
     @Override
     public Mono<UsersAuthentication> findByEmail(String email) {
-        return this.repository.findByEmail(email);
+        return this.customuserRepository.findByEmail(email);
     }
 
 }

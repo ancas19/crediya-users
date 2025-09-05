@@ -35,7 +35,7 @@ public class RouterRest {
     @Bean
     public RouterFunction<ServerResponse> routerAuthenticationFunction(){
         return route()
-                .POST("/login", authenticationRequestHandler::login)
+                .POST("/auth/login", authenticationRequestHandler::login)
                 .build();
     }
 }

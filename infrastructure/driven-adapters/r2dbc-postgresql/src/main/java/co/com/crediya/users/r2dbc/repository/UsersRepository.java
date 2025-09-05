@@ -17,23 +17,5 @@ public interface UsersRepository extends ReactiveCrudRepository<UsersEntity, UUI
     Mono<UsersEntity> findByIdentification(String userIdentification);
     Mono<Boolean> existsByemailAndIdNot(String email, UUID id);
     Mono<Boolean> existsByIdentificationAndIdNot(String documentNumber, UUID id);
-    @Query(
-            """
-            SELECT new co.com.crediya.users.model.users.models.UsersAuthentication(
-                u.id,
-                u.identification,
-                u.names,
-                u.lastName,
-                u.email,
-                u.password,
-                r.name,
-                r.title
-            )
-            FROM UsersEntity u
-            INNER JOIN RolesEntity r ON r.id=u.roleId
-            WHERE u.email=:email
-            AND u.status='ACTIVE'
-            """
-    )
-    Mono<UsersAuthentication> findByEmail(@Param("email") String email);
+
 }

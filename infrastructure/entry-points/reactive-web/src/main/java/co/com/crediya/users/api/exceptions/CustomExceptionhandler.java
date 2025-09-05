@@ -2,6 +2,7 @@ package co.com.crediya.users.api.exceptions;
 
 import co.com.crediya.users.api.response.ErrorResponse;
 import co.com.crediya.users.model.commos.enums.ErrorMessages;
+import co.com.crediya.users.model.commos.exception.BadCredentialsException;
 import co.com.crediya.users.model.commos.exception.BadRequestException;
 import co.com.crediya.users.model.commos.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,21 @@ public class CustomExceptionhandler {
                         .body(  new ErrorResponse(
                                 parseErrorMessages(ex.getMessage()),
                                 HttpStatus.NOT_FOUND.toString(),
+                                exchange.getRequest().getURI().toString(),
+                                LocalDateTime.now())
+                        )
+        );
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleBadCredentials(BadCredentialsException ex, ServerWebExchange exchange) {
+        log.error("Bad credential ", ex);
+        return Mono.just(
+                ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body(  new ErrorResponse(
+                                parseErrorMessages(ex.getMessage()),
+                                HttpStatus.UNAUTHORIZED.toString(),
                                 exchange.getRequest().getURI().toString(),
                                 LocalDateTime.now())
                         )

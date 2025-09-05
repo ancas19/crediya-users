@@ -17,7 +17,7 @@ public class AuthenticationUseCase {
     private final UsersUseCase usersUseCase;
     private final JWTUseCase jwtUseCase;
 
-    public Mono<Token> authnticate(Authentication authenticationInformation) {
+    public Mono<Token> authenticate(Authentication authenticationInformation) {
         return authenticationPort.authenticate(authenticationInformation.getEmail(), authenticationInformation.getPassword())
                 .flatMap(resul -> usersUseCase.findUserByEmail(authenticationInformation.getEmail()))
                 .flatMap(user -> {

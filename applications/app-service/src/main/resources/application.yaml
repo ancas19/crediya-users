@@ -36,3 +36,5 @@ cors:
 
 security:
   public-paths:
+    - POST:/api/v1.0/auth/login
+    - POST:/api/v1.0/users
