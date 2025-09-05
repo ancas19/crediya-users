@@ -9,6 +9,7 @@ import co.com.crediya.users.model.commos.models.Token;
 import co.com.crediya.users.model.users.models.Users;
 
 public class Mapper {
+    private Mapper(){}
     public static Users toUsersModel(UsersRequest usersRequest) {
         return Users.builder()
                 .identification(usersRequest.getIdentification())

@@ -11,6 +11,9 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Map;
 
+import static co.com.crediya.users.model.commos.enums.Constants.CALIM_IDENTIFICATION;
+import static co.com.crediya.users.model.commos.enums.Constants.CLAIM_ROLE;
+
 @RequiredArgsConstructor
 public class AuthenticationUseCase {
     private final AuthenticationPort authenticationPort;
@@ -22,8 +25,8 @@ public class AuthenticationUseCase {
                 .flatMap(resul -> usersUseCase.findUserByEmail(authenticationInformation.getEmail()))
                 .flatMap(user -> {
                     Map<String, String> claimsToSave = new HashMap<>();
-                    claimsToSave.put("identification", user.getIdentification());
-                    claimsToSave.put("role", user.getRoleName());
+                    claimsToSave.put(CALIM_IDENTIFICATION.getValue(), user.getIdentification());
+                    claimsToSave.put(CLAIM_ROLE.getValue(), user.getRoleName());
                     return this.jwtUseCase.generateToken(user.getEmail(), claimsToSave)
                             .map(token -> Token.builder()
                                     .names(user.getNames())

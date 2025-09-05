@@ -19,8 +19,8 @@ adapters:
     validationQuery: ${R2DBC_VALIDATIONQUERY:SELECT 1}
 
 jwt:
-  secret: f973594fec7723858f405e4d022ed191b5fcb9d307692501c61088852dc270c8
-  expiration: 30
+  secret: ${JWT_SECRET:secret}
+  expiration: ${JWT_TIME:8}
 
 management:
   endpoints:
@@ -37,4 +37,10 @@ cors:
 security:
   public-paths:
     - POST:/api/v1.0/auth/login
-    - POST:/api/v1.0/users
+
+logging:
+  level:
+    reactor.netty: DEBUG
+    org.springframework.data.r2dbc: DEBUG
+    io.r2dbc.postgresql.QUERY: DEBUG
+    root: INFO

@@ -50,9 +50,9 @@ class UsersUseCaseTest {
         Mono<Users> userCreated = usersUseCase.createUser(user);
         //Assert
         StepVerifier.create(userCreated)
-                .expectNextMatches(user -> {
-                            assertNotNull(user);
-                            assertNotNull(user.getId());
+                .expectNextMatches(userCreatedInformation -> {
+                            assertNotNull(userCreatedInformation);
+                            assertNotNull(userCreatedInformation.getId());
                             return true;
                         }
                 ).verifyComplete();
@@ -159,9 +159,9 @@ class UsersUseCaseTest {
         Mono<Users> userCreated = usersUseCase.updateUser(user);
         //Assert
         StepVerifier.create(userCreated)
-                .expectNextMatches(user -> {
-                            assertNotNull(user);
-                            assertNotNull(user.getId());
+                .expectNextMatches(userCreatedInformation -> {
+                            assertNotNull(userCreatedInformation);
+                            assertNotNull(userCreatedInformation.getId());
                             return true;
                         }
                 ).verifyComplete();

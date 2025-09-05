@@ -13,17 +13,19 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+
+import static co.com.crediya.users.model.commos.enums.Constants.*;
 
 public class JwtAuthenticationFilter implements WebFilter {
     private final JWTUseCase jwtPort;
-    private final List<String> publicPaths;
+    private final Set<String> cachedPublicPaths;
 
-    public JwtAuthenticationFilter(JWTUseCase jwtPort, List<String> publicPaths) {
+    public JwtAuthenticationFilter(JWTUseCase jwtPort, Set<String> publicPaths) {
         this.jwtPort = jwtPort;
-        this.publicPaths = publicPaths;
+        this.cachedPublicPaths = publicPaths;
     }
 
     @Override
@@ -35,7 +37,7 @@ public class JwtAuthenticationFilter implements WebFilter {
         }
         String token = extractToken(exchange);
         if (Objects.isNull(token)) {
-            return handleUnauthorized(exchange);
+            return invalidToken(exchange);
         }
         return this.jwtPort.validateJwt(token)
                 .flatMap(isValid->isValid?validAndContinue(token,exchange,chain):invalidToken(exchange));
@@ -44,9 +46,9 @@ public class JwtAuthenticationFilter implements WebFilter {
     private Mono<Void> validAndContinue(String token, ServerWebExchange exchange, WebFilterChain chain) {
         return Mono.just(jwtPort.getClaims(token))
                 .flatMap(claims->{
-                        String identification=claims.get("identification").toString();
-                        String role=claims.get("role").toString();
-                        List<GrantedAuthority> authorities= List.of(new SimpleGrantedAuthority(role));
+                        String identification=claims.get(CALIM_IDENTIFICATION.getValue()).toString();
+                        String role=claims.get(CLAIM_ROLE.getValue()).toString();
+                        List<GrantedAuthority> authorities= List.of(new SimpleGrantedAuthority(ROLE.getValue().formatted(role)));
                         return chain
                                 .filter(exchange)
                                 .contextWrite(ReactiveSecurityContextHolder.withAuthentication(new UsernamePasswordAuthenticationToken(identification, null, authorities)));
@@ -61,24 +63,13 @@ public class JwtAuthenticationFilter implements WebFilter {
 
     private String extractToken(ServerWebExchange exchange) {
         String token = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        if(StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+        if(StringUtils.hasText(token) && token.startsWith(BEARER.getValue())) {
             return token.substring(7).trim();
         }
         return null;
     }
-
-    private Mono<Void> handleUnauthorized(ServerWebExchange exchange) {
-        exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
-        return exchange.getResponse().setComplete();
-    }
-
     private boolean isPublicPath(String path, String method) {
-        return publicPaths.stream()
-                .anyMatch(entry -> {
-                    String[] parts = entry.split(":", 2);
-                    return parts.length == 2 &&
-                            method.equalsIgnoreCase(parts[0]) &&
-                            path.equalsIgnoreCase(parts[1]);
-                });
+        String key = method.toUpperCase() + ":" + path.toUpperCase();
+        return cachedPublicPaths.contains(key);
     }
 }

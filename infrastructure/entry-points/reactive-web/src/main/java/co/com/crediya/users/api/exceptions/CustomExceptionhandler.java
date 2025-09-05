@@ -15,6 +15,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class CustomExceptionhandler {
         return Mono.just(
                 ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
-                        .body(  new ErrorResponse(
+                        .body(new ErrorResponse(
                                 parseErrorMessages(ex.getMessage()),
                                 HttpStatus.BAD_REQUEST.toString(),
                                 exchange.getRequest().getURI().toString(),
@@ -35,13 +36,14 @@ public class CustomExceptionhandler {
                         )
         );
     }
+
     @ExceptionHandler(NotFoundException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleNotFoundException(NotFoundException ex, ServerWebExchange exchange) {
         log.error("Resource not found: ", ex);
         return Mono.just(
                 ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
-                        .body(  new ErrorResponse(
+                        .body(new ErrorResponse(
                                 parseErrorMessages(ex.getMessage()),
                                 HttpStatus.NOT_FOUND.toString(),
                                 exchange.getRequest().getURI().toString(),
@@ -56,7 +58,22 @@ public class CustomExceptionhandler {
         return Mono.just(
                 ResponseEntity
                         .status(HttpStatus.UNAUTHORIZED)
-                        .body(  new ErrorResponse(
+                        .body(new ErrorResponse(
+                                parseErrorMessages(ex.getMessage()),
+                                HttpStatus.UNAUTHORIZED.toString(),
+                                exchange.getRequest().getURI().toString(),
+                                LocalDateTime.now())
+                        )
+        );
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public Mono<ResponseEntity<ErrorResponse>> handleAccessDeniedException(AccessDeniedException ex, ServerWebExchange exchange) {
+        log.error("Access denied ", ex);
+        return Mono.just(
+                ResponseEntity
+                        .status(HttpStatus.FORBIDDEN)
+                        .body(new ErrorResponse(
                                 parseErrorMessages(ex.getMessage()),
                                 HttpStatus.UNAUTHORIZED.toString(),
                                 exchange.getRequest().getURI().toString(),
@@ -71,7 +88,7 @@ public class CustomExceptionhandler {
         return Mono.just(
                 ResponseEntity
                         .status(HttpStatus.NOT_FOUND)
-                        .body(  new ErrorResponse(
+                        .body(new ErrorResponse(
                                 List.of(ex.getMessage()),
                                 HttpStatus.NOT_FOUND.toString(),
                                 exchange.getRequest().getURI().toString(),
@@ -101,13 +118,14 @@ public class CustomExceptionhandler {
                         )
         );
     }
+
     @ExceptionHandler(Exception.class)
     public Mono<ResponseEntity<ErrorResponse>> handleGlobalExceptions(Exception ex, ServerWebExchange exchange) {
         log.error("An unexpected error occurred: ", ex);
         return Mono.just(
                 ResponseEntity
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                        .body(  new ErrorResponse(
+                        .body(new ErrorResponse(
                                 List.of(ErrorMessages.ERROR_MESSAGE_GLOBAL_EXCEPTION.getMessage()),
                                 HttpStatus.INTERNAL_SERVER_ERROR.toString(),
                                 exchange.getRequest().getURI().toString(),

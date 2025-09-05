@@ -20,6 +20,13 @@ import org.springframework.web.cors.reactive.CorsConfigurationSource;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import static co.com.crediya.users.model.commos.enums.Endpoints.AUTH_LOGIN;
+import static co.com.crediya.users.model.commos.enums.Endpoints.USERS_ENDPOINT;
+import static co.com.crediya.users.model.commos.enums.Roles.ADMIN;
+import static co.com.crediya.users.model.commos.enums.Roles.ASESOR;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -33,10 +40,11 @@ public class WebSecurity {
 
     @Bean
     public SecurityWebFilterChain httpSecurityFilterChain(ServerHttpSecurity http, ReactiveAuthenticationManager authenticationManager, JWTUseCase jwtService) {
+        Set<String> publicUrls = new HashSet<>(securityProperties.getPublicPaths());
         return http.authorizeExchange(
                         exchanges -> exchanges
-                                .pathMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                                .pathMatchers(HttpMethod.POST, "/users").permitAll()//.hasAnyRole("ROLE_ADMIN", "ROLE_ASESOR")
+                                .pathMatchers(HttpMethod.POST, AUTH_LOGIN.getValue()).permitAll()
+                                .pathMatchers(HttpMethod.POST, USERS_ENDPOINT.getValue()).hasAnyRole(ADMIN.getValue(), ASESOR.getValue())
                                 .anyExchange()
                                 .authenticated()
                 )
@@ -44,7 +52,7 @@ public class WebSecurity {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .authenticationManager(authenticationManager)
-                .addFilterAt(new JwtAuthenticationFilter(jwtService,securityProperties.getPublicPaths()), SecurityWebFiltersOrder.AUTHENTICATION)
+                .addFilterAt(new JwtAuthenticationFilter(jwtService,publicUrls), SecurityWebFiltersOrder.AUTHENTICATION)
                 .securityContextRepository(NoOpServerSecurityContextRepository.getInstance())
                 .build();
     }

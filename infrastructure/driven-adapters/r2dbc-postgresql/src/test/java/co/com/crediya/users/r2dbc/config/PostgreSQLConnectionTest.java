@@ -1,7 +1,6 @@
 package co.com.crediya.users.r2dbc.config;
 
 import io.r2dbc.pool.ConnectionPool;
-import io.r2dbc.pool.ConnectionPoolConfiguration;
 import io.r2dbc.postgresql.PostgresqlConnectionFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
